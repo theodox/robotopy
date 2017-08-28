@@ -39,17 +39,12 @@ def desired_speed(ms):
 def set_speed(self, ms):
     self.setSpeed(desired_speed(ms))
 
-def _init_motor(idx):
-    # patch the adafruit controller
-    # to set speeds in m/s
-    motor = controller.getMotor(idx)
-    motor.set_speed = set_speed
-    return motor
+Adafruit_DCMotor.set_speed = set_speed
 
-left_rear = _init_motor(1)
-left_front = _init_motor(2)
-right_front = _init_motor(3)
-right_rear = _init_motor(4)
+left_rear = controller.getMotor(1)
+left_front = controller.getMotor(2)
+right_front = controller.getMotor(3)
+right_rear = controller.getMotor(4)
 logger.info("motors initialized created")
 
 
