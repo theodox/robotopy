@@ -10,9 +10,6 @@ logger = logging.getLogger('motors')
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.DEBUG)
 
-
-
-
 FORWARD = Adafruit_MotorHAT.FORWARD
 BACKWARD = Adafruit_MotorHAT.BACKWARD
 RELEASE = Adafruit_MotorHAT.RELEASE
@@ -26,19 +23,20 @@ except IOError:
     logging.critical("unable to configure motors: hardware needs to be reset")
     raise
 
-
 def desired_speed(ms):
     normalized = min (ms / 0.8, 1)
     normalized = max(normalized, 0)
     # this is a very basic approximation
     # a spline through recorded data
     # would be much better
-    normalized = pow(normalized, 1.1)
-    return 16 + (239 * normalized)
+    normalized = pow(normalized, 0.85)
+    output = int(255 * normalized)
+    return output
 
+# patch the Adafruit motor to allow 
+# setting speeds by m/s
 def set_speed(self, ms):
     self.setSpeed(desired_speed(ms))
-
 Adafruit_DCMotor.set_speed = set_speed
 
 left_rear = controller.getMotor(1)
@@ -47,8 +45,6 @@ right_front = controller.getMotor(3)
 right_rear = controller.getMotor(4)
 logger.info("motors initialized created")
 
-
-
 # a motor value of 255 is about .8m/s  for a well charged battery
 # 128 = .38m/s
 # 64 = 0.18/s
@@ -56,15 +52,12 @@ logger.info("motors initialized created")
 # 16 = effectively 0
 
 
-
-
-
 def shutdown():
     for eachmotor in left_rear, left_front, right_front, right_rear:
         eachmotor.run(RELEASE)
 
-    logging.info("motors shut down")
+    logger.info("motors shut down")
 
-atexit.register(shutdown())
+atexit.register(shutdown)
 
 
