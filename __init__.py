@@ -1,11 +1,13 @@
-from motors import left_front, right_front, left_rear, right_rear, FORWARD
+from motors import forward, turn_right, halt
 
 import time
 
 
-if __name__ == '__main__':
-    for m in left_rear, right_rear, right_front, left_front:
-        m.set_speed(0.5)
-        m.run(FORWARD)
-
-    time.sleep(4)
+forward(.5)
+time.sleep(2)
+halt()
+time.sleep(.5)
+turn_right()
+time.sleep(2)
+forward(.5)
+time.sleep(1)
