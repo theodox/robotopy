@@ -33,16 +33,27 @@ def desired_speed(ms):
     output = int(255 * normalized)
     return output
 
+
+
 # patch the Adafruit motor to allow 
 # setting speeds by m/s
 def set_speed(self, ms):
-    self.setSpeed(desired_speed(ms))
+    raw_speed = desired_speed(ms)
+    adjusted = raw_speed + self.drift
+    adjusted = max(min(adjusted, 255), 0)
+    self.setSpeed(adjusted)
+
 Adafruit_DCMotor.set_speed = set_speed
 
 left_rear = controller.getMotor(1)
 left_front = controller.getMotor(2)
 right_front = controller.getMotor(3)
 right_rear = controller.getMotor(4)
+
+# patch the motor to adjust for left-right drift
+right_rear.drift = -32
+right_front.drift = -32
+
 logger.info("motors initialized created")
 
 # a motor value of 255 is about .8m/s  for a well charged battery
@@ -59,5 +70,4 @@ def shutdown():
     logger.info("motors shut down")
 
 atexit.register(shutdown)
-
 
