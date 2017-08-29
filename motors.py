@@ -1,3 +1,5 @@
+
+
 import logging
 import atexit
 import math
@@ -58,7 +60,7 @@ right_rear = controller.getMotor(2)
 right_rear.drift = 0
 right_front.drift = 64
 left_rear.drift = 64
-left_front.drift = 32
+left_front.drift = 0
 
 logger.info("motors initialized created")
 
@@ -79,7 +81,7 @@ def halt():
 
 def turn_right():
     for motor in left_rear, left_front, right_front, right_rear:
-	motor.set_speed(0.4)
+	motor.set_speed(0.35) # seems to be the lowest practical value
     for motor in left_rear, left_front:
         motor.run(FORWARD)
     for motor in right_rear, right_front:
